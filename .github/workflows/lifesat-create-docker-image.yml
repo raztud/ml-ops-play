@@ -1,0 +1,17 @@
+name: "[lifesat] Docker Train Image"
+
+on:
+  push:
+    paths:
+      - "projects/lifesat/**"
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: export PROJECT=lifesat && docker build --file projects/${PROJECT}/Dockerfile . --build-arg project=${PROJECT} --tag ${PROJECT}:$(date +%s) --target train
