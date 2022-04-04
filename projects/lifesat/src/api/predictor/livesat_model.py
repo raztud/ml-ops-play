@@ -2,6 +2,7 @@ import logging
 
 from joblib import load
 
+from api.models import LivesatRequestModel
 from framework.model.model_interface import ModelInterface
 from framework.model.model_predictor import ModelPredictor
 
@@ -22,7 +23,8 @@ class LivesatModel:
             self._model = self.load_model()
             self.predictor.set_model(self._model)
 
-    def predict(self, x_new):
+    def predict(self, request: LivesatRequestModel):
+        x_new = request.gdp
         if not self._model:
             self._model = self.load_model()
             self.predictor.set_model(self._model)

@@ -1,3 +1,28 @@
+# About
+
+MLOps Play is a framework which tries to apply the ML Ops principles in order to train and productionize Machine Learning Models. 
+
+It uses live satisfaction model to exemplify:
+
+**Training:**
+- automatically builds the training docker image through Github Actions
+- automatically save training image into AWS ECR
+- automatically save the trained model in AWS S3
+
+**Testing:**
+- automatically linting 
+- automatically testing the code
+
+**Serving:**
+- (for the moment, manually) builds manually the serve container
+- loads the trained model from S3
+- expose `/predict` api with the defined interface per model
+
+**Others:**
+- supports multiple models in a consistent manner
+- agnostic monitoring
+
+
 ## Commands 
 
 ###### build container
@@ -52,6 +77,19 @@ $ uvicorn main:app --reload --port 8080
 # or
 $ python main.py
 ```
+
+##### start the API using docker
+
+```bash
+# setup the env variables
+$ export AWS_ACCESS_KEY_ID=... 
+$ export AWS_SECRET_ACCESS_KEY=...
+$ export S3_BUCKET=...
+# run build & run it
+$ make build-serve
+$ make serve
+```
+
 Run http call:
 ```bash
 curl -X 'POST' \
@@ -69,21 +107,3 @@ Expected response:
   "prediction": 5.962423376619663
 }
 ```
-
-
-## TODO
-- <strike>docker command to train, lint, unit test</strike>
-- <strike>github action to run lint</strike>
-- <strike>metrics support</strike>
-- ecr repo
-- github action to build a docker image
-
-# Architecture
-
-This framework allows to easily train and serve predictions for different ML models.
-Features:
-- build training container
-- support for S3 upload and download of the training artifacts
-- testing container
-- serving API based on FastAPI (todo: container)
-- support for metrics (time to respond, count)

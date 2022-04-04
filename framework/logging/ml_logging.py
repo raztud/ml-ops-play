@@ -1,7 +1,8 @@
 import logging.config
 import os
 
-logging.config.fileConfig('logging.conf', disable_existing_loggers=False)
+path_to_conf = os.path.dirname(os.path.realpath(__file__))
+logging.config.fileConfig(f'{path_to_conf}/logging.conf', disable_existing_loggers=False)
 
 logger = logging.getLogger(__name__)
 log_factory = logging.getLogRecordFactory()

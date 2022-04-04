@@ -3,9 +3,9 @@ from typing import Union
 from pydantic import BaseModel
 
 
-class Prediction(BaseModel):
+class LivesatPrediction(BaseModel):
     prediction: Union[float, int]
 
 
-class RequestModel(BaseModel):
+class LivesatRequestModel(BaseModel):
     gdp: int

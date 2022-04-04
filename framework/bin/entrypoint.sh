@@ -27,6 +27,10 @@ case "$entrypoint" in
   "train")
     python "${WORKDIR}/${PROJECT}/train.py" ${arguments}
     ;;
+
+  "serve")
+    uvicorn main:app --reload --port 8080 --app-dir=${WORKDIR}/${PROJECT}/api
+    ;;
   "")
     echo "You must specify a command as an argument. For instance, try 'train'"
     exit 1

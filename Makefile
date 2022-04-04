@@ -9,3 +9,9 @@ export SHELLOPTS        :=$(if $(SHELLOPTS),$(SHELLOPTS):)errexit
 build-lint:
 	@echo "Build container for linting for project ${PROJECT}"
 	docker build -f projects/${PROJECT}/Dockerfile . --build-arg project=${PROJECT} -t ${PROJECT}_test --target test
+
+build-serve:
+	 docker build -f projects/${PROJECT}/Dockerfile . --build-arg project=${PROJECT} -t ${PROJECT}_serve --target serve
+
+serve:
+	docker run -p 8081:8080 -e S3_BUCKET -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY ${PROJECT}_serve:latest serve

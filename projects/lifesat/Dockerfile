@@ -4,9 +4,9 @@ RUN apt-get update && python -m pip install --upgrade pip
 ARG WORKDIR=/usr/src/app
 ARG project
 
-ENV PYTHONPATH=${WORKDIR}
 ENV PROJECT=${project}
 ENV WORKDIR=${WORKDIR}
+ENV PYTHONPATH "${PYTHONPATH}:${WORKDIR}:${WORKDIR}/${PROJECT}"
 
 WORKDIR ${WORKDIR}
 
@@ -40,4 +40,7 @@ COPY projects/${PROJECT}/src/api ${PROJECT}/api
 COPY projects/${PROJECT}/requirements.txt ${PROJECT}/requirements.txt
 
 RUN pip install --no-cache-dir -r framework/requirements.txt \
-    && pip install --no-cache-dir -r projects/${PROJECT}/src/api/requirements.txt
+    && pip install --no-cache-dir -r ${PROJECT}/api/requirements.txt
+
+EXPOSE 8080
+ENTRYPOINT ["./framework/bin/entrypoint.sh"]

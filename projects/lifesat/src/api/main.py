@@ -1,10 +1,11 @@
 import os
 
+from api.models import LivesatPrediction
 from predictor.livesat_model import LivesatModel
 
 from framework.api.main import ServingApp, start_app
 
-app = ServingApp(LivesatModel)
+app = ServingApp(LivesatModel, LivesatPrediction)
 start_app(app)
 
 

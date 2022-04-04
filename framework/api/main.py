@@ -1,9 +1,10 @@
 import os
 import time
-from typing import Union
+from typing import Union, Type
 
-from api.ml_logging import logging
-from api.models import Prediction, RequestModel
+from pydantic import BaseModel
+
+from framework.logging.ml_logging import logging
 from fastapi import FastAPI, Request
 
 from framework.model.model_interface import ModelInterface
@@ -12,14 +13,15 @@ from framework.monitoring.metric import Metric
 
 
 class ServingApp(FastAPI):
-    def __init__(self, model_class, *args, **kwargs):
+    def __init__(self, model_class, response_model, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.model_class = model_class
         self.model: Union[ModelInterface, None] = None
         self.metrics = LoggerMetric()
+        self.response_model: Type[BaseModel] = response_model
 
 
-def start_app(app):
+def start_app(app: ServingApp):
     @app.on_event("startup")
     async def startup():
         logging.info(f"Start application with model {app.model_class}")
@@ -31,10 +33,10 @@ def start_app(app):
     async def ping():
         return {"hello": os.environ.get("PROJECT", "world")}
 
-    @app.post("/predict", response_model=Prediction)
-    async def predict(request: RequestModel):
+    @app.post("/predict", response_model=app.response_model)
+    async def predict(request: BaseModel):
         return {
-            "prediction": app.model.predict(request.gdp),
+            "prediction": app.model.predict(request),
         }
 
     @app.middleware("http")
