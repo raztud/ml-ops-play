@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  serve:
+    image: "${PROJECT}_serve"
+    environment:
+      - PYTHONPATH=/usr/src/app/projects/lifesat/src/api/:/usr/src/app/projects/lifesat/src/  # or ${PYTHONPATH}
+      - PYTHONDONTWRITEBYTECODE=${PYTHONDONTWRITEBYTECODE}
+      - PYTHONUNBUFFERED=${PYTHONUNBUFFERED}
+      - S3_BUCKET=${S3_BUCKET}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - PROJECT=${PROJECT-lifesat}
+    build:
+      context: .
+      dockerfile: "projects/${PROJECT}/Dockerfile"
+      target: serve
+      args:
+        project: ${PROJECT}
+    entrypoint: uvicorn main:app --reload --port 8080 --host 0.0.0.0
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "${SERVE_PORT:-8080}:8080"

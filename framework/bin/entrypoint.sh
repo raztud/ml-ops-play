@@ -29,7 +29,7 @@ case "$entrypoint" in
     ;;
 
   "serve")
-    uvicorn main:app --reload --port 8080 --app-dir=${WORKDIR}/${PROJECT}/api
+    uvicorn main:app --reload --port 8080 --host 0.0.0.0 --app-dir=${WORKDIR}/${PROJECT}/api
     ;;
   "")
     echo "You must specify a command as an argument. For instance, try 'train'"
